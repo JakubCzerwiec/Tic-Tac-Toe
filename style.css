@@ -1,0 +1,16 @@
+
+
+.square {
+    width: 5em;
+    height: 5em;
+    border: 1px solid green;
+}
+
+.board {
+    display: grid;
+    grid-template-rows: 5em 5em 5em;
+    grid-template-columns: 5em 5em 5em;
+    border: 1px solid green;
+    width: max-content;
+    margin: 3em auto;
+}
