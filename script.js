@@ -1,7 +1,24 @@
-/* Defining objects */
+/* Defining objects and DOM objcets */
+
 let boardDispl = document.querySelector('.board');
 let test = document.querySelector('.test');
 let form = document.querySelector('.names');
+let startBtn = document.querySelector('.submitBtn');
+let winner = document.querySelector('.winner');
+let winDiv = document.querySelector('.win');
+
+/* Winning conditions */
+
+let winningConditions = [
+    [0, 1, 2], 
+    [3, 4, 5], 
+    [6, 7, 8], 
+    [0, 3, 6], 
+    [1, 4, 7], 
+    [2, 5, 8], 
+    [0, 4, 8], 
+    [2, 4, 6]
+];
 
 
 /* Gameboard */
@@ -23,7 +40,6 @@ function renderBoard () {
     swap ()
 }
 
-
 /* Player factory */
 
 const playerFactory = (name, mark) => {
@@ -32,7 +48,7 @@ const playerFactory = (name, mark) => {
 }
 
 
-/* Creating players from form */
+/* Creating players from form and Start game*/
 
 let playerOne;
 let playerTwo;
@@ -44,63 +60,61 @@ form.addEventListener('submit', (e) => {
 
     playerOne = playerFactory (player1, 'X');
     playerTwo = playerFactory (player2, 'O');
+    form.classList.add('hiden')
+    form.reset();
 })
 
 
 /* Gameplay */
 
+function initListener1 () {
+    let box = document.querySelectorAll('.square')
 
-    
-        function initListener1 () {
-            let box = document.querySelectorAll('.square')
-
-            box.forEach((item, index) => {
+    box.forEach((item, index) => {
 
 
-                item.addEventListener('click', () => {
-                     if (gameboard.board[index] !== ' ') {
-                        console.log('Try another')
-                    } 
-                    else if (gameboard.board[index] == ' ')  {
-                        gameboard.board[index] = playerOne.mark;
-                        renderBoard ()
-                        
-                        win ()
-                        
-                        initListener2()
-                    }
-                })
-            })
-
+        item.addEventListener('click', () => {
+                if (gameboard.board[index] !== ' ') {
+                console.log('Try another')
+            } 
+            else if (gameboard.board[index] == ' ')  {
+                gameboard.board[index] = playerOne.mark;
+                renderBoard ()
+                
+                win ()
+                
+                swap ()
             }
+        })
+    })
 
-            function initListener2 () {
-                let box = document.querySelectorAll('.square')
-            
-                box.forEach((item, index) => {
-            
-            
-                    item.addEventListener('click', () => {
-                         if (gameboard.board[index] !== ' ') {
-                            console.log('Try another')
-                        } 
-                        else if (gameboard.board[index] == ' ')  {
-                            gameboard.board[index] = playerTwo.mark;
-                            renderBoard ()
-                            
-                            win ()
-                            
-                            initListener1()
-                        }
-                    })
-                })
-            
-                }
-            
+    }
 
+function initListener2 () {
+    let box = document.querySelectorAll('.square')
+
+    box.forEach((item, index) => {
+
+
+        item.addEventListener('click', () => {
+                if (gameboard.board[index] !== ' ') {
+                console.log('Try another')
+            } 
+            else if (gameboard.board[index] == ' ')  {
+                gameboard.board[index] = playerTwo.mark;
+                renderBoard ()
+                
+                win ()
+                
+                swap ()
+            }
+        })
+    })
+
+    }
+            
 
 /* Swap players */
-
 
 function swap () {
     let plOneAmount = 0;
@@ -120,52 +134,66 @@ function swap () {
     } else if (plOneAmount > plTwoAmount) {
         initListener2 ()
     }
-}
+} 
 
-
-/* Winning conditions */
-
-
-let winningConditions = [
-    [0, 1, 2], 
-    [3, 4, 5], 
-    [6, 7, 8], 
-    [0, 3, 6], 
-    [1, 4, 7], 
-    [2, 5, 8], 
-    [0, 4, 8], 
-    [2, 4, 6]
-];
 
 /* Function to check if player win */
+
 function win () {
     
-    let ind = [];
+    let ind1 = [];
+    let ind2 = [];
 
     for (let i = 0; i < gameboard.board.length; i++) {
         
         if (gameboard.board[i] === `${playerOne.mark}`) {
-            ind.push(i)
+            ind1.push(i)
+        } else if (gameboard.board[i] === `${playerTwo.mark}`) {
+            ind2.push(i)
         }
     }
         
-        
         for (let i = 0; i < winningConditions.length; i++) {
-            let count = 0;
-            let compare = [];
-            compare = [...winningConditions[i], ...ind]
-            compare.sort();
+            let count1 = 0;
+            let compare1 = [];
+            let count2 = 0;
+            let compare2 = [];
+
+            compare1 = [...winningConditions[i], ...ind1]
+            compare1.sort();
+
+            compare2 = [...winningConditions[i], ...ind2]
+            compare2.sort();
     
-            for (let j = 0; j < compare.length; j++) {
-                if (compare[j] == compare[j+1]) {
-                    count++;
-                    console.log(count)
+            for (let j = 0; j < compare2.length; j++) {
+                if (compare1[j] == compare1[j+1]) {
+                    count1++;
+                    console.log(`count 1: ${count1}`)
+
+                } else if (compare2[j] == compare2[j+1]) {
+                    count2++;
+                    console.log(`count 2: ${count2}`)
                 }
             }
-            if (count == 3) {
-                console.log('Win!')
+
+            if (count1 == 3) {
+                winDiv.classList.remove('invisible');
+                winner.innerHTML = `${playerOne.name}`;
+
+            } else if (count2 == 3) {
+                winDiv.classList.remove('invisible');
+                winner.innerHTML = `${playerTwo.name}`;
             }
         }
     
 }
 
+
+/* Restart game */
+
+winDiv.addEventListener('click', () => {
+    gameboard.board = [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '];
+    renderBoard();
+    winDiv.classList.add('invisible');
+    form.classList.remove('hiden')
+})
