@@ -1,16 +1,118 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: arial,sans-serif;
+    background-color: grey;
+}
 
+form {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    transition: ease-in-out .7s;
+    height: min-content;
+}
+
+.hiden {
+    transform: translate(-50%, -250%);
+    opacity: 0;
+}
+
+.names {
+    width: 40%;
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    text-align: center;
+    border: 3px rebeccapurple solid;
+    padding: 2em;
+    border-radius: 1em;
+    background-color: rosybrown;
+}
+
+input {
+    margin: 1em;
+    font-size: 1.3em;
+    padding: .5em;
+    background-color: white;
+}
+
+label {
+    font-size: 1.3em;
+    background-color: sandybrown;
+    color: rebeccapurple;
+    width: 40%;
+    margin: 0 auto;
+    padding: .5em;
+}
+
+.submitBtn {
+    width: max-content;
+    margin: 0 auto;
+    padding: 1em 2em;
+    cursor: pointer;
+    background-color: rebeccapurple;
+    color: sandybrown;
+    font-weight: bold;
+}
+
+h1 {
+    width: fit-content;
+    margin: 1em auto;
+    font-size: 3em;
+}
 
 .square {
-    width: 5em;
-    height: 5em;
-    border: 1px solid green;
+    width: 10em;
+    height: 10em;
+    border: 2px solid purple;
+    font-size: 1em;
+    display: flex;
+    text-align: center;
+    align-items: center;
+}
+
+.square p {
+    font-size: 7em;
+    background-color: grey;
 }
 
 .board {
     display: grid;
-    grid-template-rows: 5em 5em 5em;
-    grid-template-columns: 5em 5em 5em;
-    border: 1px solid green;
+    grid-template-rows: 10em 10em 10em;
+    grid-template-columns: 10em 10em 10em;
+    border: 2px solid purple;
     width: max-content;
     margin: 3em auto;
+}
+
+.win {
+    width: 60vw;
+    height: 60vh;
+    margin: auto;
+    background-color: thistle;
+    color: tomato;
+    font-size: 5em;
+    font-weight: bold;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+    border-radius: 1em;
+}
+
+.invisible {
+    transform: translate(-50%, -250%);
+    opacity: 0;
+}
+
+p {
+    background-color: thistle;
+    margin: auto;
 }

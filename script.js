@@ -18,7 +18,7 @@ renderBoard ();
 function renderBoard () {
     boardDispl.innerHTML = ''
     for (let i = 0; i < gameboard.board.length; i++) {
-        boardDispl.innerHTML += `<div class="square num${[i]}">${gameboard.board[i]}</div>`
+        boardDispl.innerHTML += `<div class="square num${[i]}"><p>${gameboard.board[i]}</p></div>`
     }
     swap ()
 }
