@@ -183,6 +183,10 @@ function win () {
             } else if (count2 == 3) {
                 winDiv.classList.remove('invisible');
                 winner.innerHTML = `${playerTwo.name}`;
+                
+            } else if (ind1.length > 4) {
+                winDiv.classList.remove('invisible');
+                winDiv.innerHTML = `<p>It's a TIE</p><p>Click to play again</p>`;
             }
         }
     

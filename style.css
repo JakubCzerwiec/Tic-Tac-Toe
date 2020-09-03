@@ -1,3 +1,5 @@
+/* General properties */
+
 * {
     box-sizing: border-box;
     margin: 0;
@@ -5,6 +7,9 @@
     font-family: arial,sans-serif;
     background-color: grey;
 }
+
+
+/* Players form */
 
 form {
     position: fixed;
@@ -58,39 +63,53 @@ label {
     font-weight: bold;
 }
 
+/* Board header */
+
 h1 {
     width: fit-content;
     margin: 1em auto;
     font-size: 3em;
 }
 
+
+/* Gameplay */
+
 .square {
     width: 10em;
     height: 10em;
-    border: 2px solid purple;
+    background-color: green;
     font-size: 1em;
     display: flex;
     text-align: center;
-    align-items: center;
+    align-items: stretch;
+    cursor: pointer;
+    border: 2px solid purple;
 }
 
 .square p {
-    font-size: 7em;
-    background-color: grey;
+    font-size: 6em;
+    
+    
+    width: 100%;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .board {
     display: grid;
     grid-template-rows: 10em 10em 10em;
     grid-template-columns: 10em 10em 10em;
-    border: 2px solid purple;
+    
+   
     width: max-content;
     margin: 3em auto;
 }
 
 .win {
     width: 60vw;
-    height: 60vh;
+    height: 70vh;
     margin: auto;
     background-color: thistle;
     color: tomato;
@@ -108,13 +127,21 @@ h1 {
     border-radius: 1em;
 }
 
+
+/* Winnig message and restart game */
+
 .invisible {
-    z-index: -1;
+    z-index: -3;
     opacity: 0;
     transition: opacity .5s ease-in-out;
 }
 
-p {
+.winner, .restart, .winning {
+    background-color: thistle;
+    margin: auto;
+}
+
+.win p {
     background-color: thistle;
     margin: auto;
 }
