@@ -1,15 +1,15 @@
 /* Defining objects and DOM objcets */
 
-let boardDispl = document.querySelector('.board');
-let test = document.querySelector('.test');
-let form = document.querySelector('.names');
-let startBtn = document.querySelector('.submitBtn');
-let winner = document.querySelector('.winner');
-let winDiv = document.querySelector('.win');
+const boardDispl = document.querySelector('.board');
+const test = document.querySelector('.test');
+const form = document.querySelector('.names');
+const startBtn = document.querySelector('.submitBtn');
+const winner = document.querySelector('.winner');
+const winDiv = document.querySelector('.win');
 
 /* Winning conditions */
 
-let winningConditions = [
+const winningConditions = [
     [0, 1, 2], 
     [3, 4, 5], 
     [6, 7, 8], 
@@ -21,30 +21,21 @@ let winningConditions = [
 ];
 
 
-/* Gameboard */
-const gameboard = (() => {
-    const board = [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '];
-
-    return {
-        board
-    }
-})();
-
-renderBoard ();
-
-function renderBoard () {
-    boardDispl.innerHTML = ''
-    for (let i = 0; i < gameboard.board.length; i++) {
-        boardDispl.innerHTML += `<div class="square num${[i]}"><p>${gameboard.board[i]}</p></div>`
-    }
-    swap ()
-}
-
 /* Player factory */
 
 const playerFactory = (name, mark) => {
-    
-    return {name, mark}
+    const movesCount =  () => {
+
+        let plAmount = 0;
+
+        for (let i = 0; i < gameboard.board.length; i++) {
+            if (gameboard.board[i] === mark) {
+                plAmount++
+            }  
+        }
+        return plAmount
+    }
+    return {name, mark, movesCount}
 }
 
 
@@ -60,18 +51,49 @@ form.addEventListener('submit', (e) => {
 
     playerOne = playerFactory (player1, 'X');
     playerTwo = playerFactory (player2, 'O');
+    initListener1 ()
     form.classList.add('hiden')
     form.reset();
 })
 
 
+/* Gameboard module */
+const gameboard = (() => {
+    const board = [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '];
+    let rendering = () => {
+        boardDispl.innerHTML = ''
+        for (let i = 0; i < gameboard.board.length; i++) {
+            boardDispl.innerHTML += `<div class="square num${[i]}"><p>${gameboard.board[i]}</p></div>`
+        }
+        
+    }
+
+    return {
+        board, rendering
+    }
+})();
+
+gameboard.rendering()
+
+
+/* Swap players logic */
+
+const swaping = { swap: function () {
+
+    if (playerOne.movesCount() == playerTwo.movesCount()) {
+        initListener1 ()
+    } else if (playerOne.movesCount() > playerTwo.movesCount()) {
+        initListener2 ()
+    }
+} }
+
+
 /* Gameplay */
 
-function initListener1 () {
+const initListener1 = () => {
     let box = document.querySelectorAll('.square')
 
     box.forEach((item, index) => {
-
 
         item.addEventListener('click', () => {
                 if (gameboard.board[index] !== ' ') {
@@ -79,18 +101,17 @@ function initListener1 () {
             } 
             else if (gameboard.board[index] == ' ')  {
                 gameboard.board[index] = playerOne.mark;
-                renderBoard ()
+                gameboard.rendering()
                 
-                win ()
+                winTo ()
                 
-                swap ()
+                swaping.swap()  
             }
         })
     })
+}
 
-    }
-
-function initListener2 () {
+const initListener2 = () => {
     let box = document.querySelectorAll('.square')
 
     box.forEach((item, index) => {
@@ -102,94 +123,55 @@ function initListener2 () {
             } 
             else if (gameboard.board[index] == ' ')  {
                 gameboard.board[index] = playerTwo.mark;
-                renderBoard ()
+                gameboard.rendering()
                 
-                win ()
+                winTo ()
                 
-                swap ()
+                swaping.swap()
             }
         })
     })
-
-    }
+}
             
 
-/* Swap players */
+/* Function to check if someone win */
 
-function swap () {
-    let plOneAmount = 0;
-    let plTwoAmount = 0;
+const winTo = () => {
+    for (let i = 0; i < winningConditions.length; i++) {
+        for (let j = 0; j < 4; j++) {
 
-    for (let i = 0; i < gameboard.board.length; i++) {
+            if (gameboard.board[winningConditions[i][j]] == 'X' &&
+                gameboard.board[winningConditions[i][j]] == gameboard.board[winningConditions[i][j+1]] &&
+                gameboard.board[winningConditions[i][j+1]] == gameboard.board[winningConditions[i][j+2]]) {
+                    winX ();
 
-        if (gameboard.board[i] === 'X') {
-            plOneAmount++
-        } else if (gameboard.board[i] === 'O') {
-            plTwoAmount++
-        }
-    }
+            }  if (gameboard.board[winningConditions[i][j]] == 'O' &&
+                gameboard.board[winningConditions[i][j]] == gameboard.board[winningConditions[i][j+1]] &&
+                gameboard.board[winningConditions[i][j+1]] == gameboard.board[winningConditions[i][j+2]]) {
+                    winY ();
 
-    if (plOneAmount == plTwoAmount) {
-        initListener1 ()
-    } else if (plOneAmount > plTwoAmount) {
-        initListener2 ()
-    }
-} 
-
-
-/* Function to check if player win */
-
-function win () {
-    
-    let ind1 = [];
-    let ind2 = [];
-
-    for (let i = 0; i < gameboard.board.length; i++) {
-        
-        if (gameboard.board[i] === `${playerOne.mark}`) {
-            ind1.push(i)
-        } else if (gameboard.board[i] === `${playerTwo.mark}`) {
-            ind2.push(i)
-        }
-    }
-        
-        for (let i = 0; i < winningConditions.length; i++) {
-            let count1 = 0;
-            let compare1 = [];
-            let count2 = 0;
-            let compare2 = [];
-
-            compare1 = [...winningConditions[i], ...ind1]
-            compare1.sort();
-
-            compare2 = [...winningConditions[i], ...ind2]
-            compare2.sort();
-    
-            for (let j = 0; j < compare2.length; j++) {
-                if (compare1[j] == compare1[j+1]) {
-                    count1++;
-                    console.log(`count 1: ${count1}`)
-
-                } else if (compare2[j] == compare2[j+1]) {
-                    count2++;
-                    console.log(`count 2: ${count2}`)
-                }
+            }  if (!gameboard.board.includes(' ') )  {
+                    draw ();
             }
-
-            if (count1 == 3) {
-                winDiv.classList.remove('invisible');
-                winner.innerHTML = `${playerOne.name}`;
-
-            } else if (count2 == 3) {
-                winDiv.classList.remove('invisible');
-                winner.innerHTML = `${playerTwo.name}`;
-                
-            } else if (ind1.length > 4) {
-                winDiv.classList.remove('invisible');
-                winDiv.innerHTML = `<p>It's a TIE</p><p>Click to play again</p>`;
-            }
+        
         }
-    
+    } 
+}
+
+
+const winX = () => {
+    winDiv.classList.remove('invisible');
+    winner.innerHTML = `${playerOne.name}`;
+}
+
+const winY = () => {
+    winDiv.classList.remove('invisible');
+    winner.innerHTML = `${playerTwo.name}`;
+}
+
+const draw = () => {
+    winDiv.classList.remove('invisible');
+    winDiv.innerHTML = `<p>It's a TIE</p><p>Click to play again</p>`;
 }
 
 
@@ -197,7 +179,7 @@ function win () {
 
 winDiv.addEventListener('click', () => {
     gameboard.board = [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '];
-    renderBoard();
+    gameboard.rendering();
     winDiv.classList.add('invisible');
     form.classList.remove('hiden')
 })
